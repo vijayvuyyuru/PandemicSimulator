@@ -7,10 +7,10 @@ from numpy import max
 
 from pandemic_simulator.environment import austin_regulations, PandemicSimOpts, PandemicSimNonCLIOpts
 from pandemic_simulator.script_helpers import small_town_population_params, make_sim
-from pandemic_simulator.viz import GraphViz
+from pandemic_simulator.viz import ContactViz
 
 
-def run(days: int, stage: int, days_per_interval: int):
+def run(days: int, stage: int):
     # setup rng
     numpy_rng = np.random.RandomState(seed=100)
 
@@ -22,7 +22,7 @@ def run(days: int, stage: int, days_per_interval: int):
     sim = make_sim(sim_opts, sim_non_cli_opts, numpy_rng=numpy_rng)
 
     # setup viz
-    viz = GraphViz(sim, num_stages=len(austin_regulations), days_per_interval=days_per_interval)
+    viz = ContactViz(sim, num_stages=len(austin_regulations))
 
     # run regulation stpes in the simulator
     stage_to_regulation = {reg.stage: reg for reg in austin_regulations}
@@ -52,7 +52,6 @@ def run(days: int, stage: int, days_per_interval: int):
     # generate plots
     viz.plot()
 
-    return viz._num_components_per_interval
 
 
 if __name__ == '__main__':
@@ -61,7 +60,7 @@ if __name__ == '__main__':
 
     stage_results = []
     #for stage in range(0, 5):
-    stage_results.append(run(days=100, stage=0, days_per_interval=days_per_interval))
+    stage_results.append(run(days=100, stage=0))
 
     plt.figure(figsize=(12, 8))
 
