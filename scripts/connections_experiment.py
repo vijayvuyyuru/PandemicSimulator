@@ -10,7 +10,7 @@ from pandemic_simulator.script_helpers import small_town_population_params, make
 from pandemic_simulator.viz import ContactViz
 
 
-def run(days: int, stage: int):
+def run(days: int, stage: int, days_per_interval: int):
     # setup rng
     numpy_rng = np.random.RandomState(seed=100)
 
@@ -22,7 +22,7 @@ def run(days: int, stage: int):
     sim = make_sim(sim_opts, sim_non_cli_opts, numpy_rng=numpy_rng)
 
     # setup viz
-    viz = ContactViz(sim, num_stages=len(austin_regulations))
+    viz = ContactViz(sim, num_stages=len(austin_regulations), days_per_interval=days_per_interval)
 
     # run regulation stpes in the simulator
     stage_to_regulation = {reg.stage: reg for reg in austin_regulations}
@@ -52,6 +52,7 @@ def run(days: int, stage: int):
     # generate plots
     viz.plot()
 
+    return viz._num_components_per_interval
 
 
 if __name__ == '__main__':
@@ -59,17 +60,16 @@ if __name__ == '__main__':
     days_per_interval = 14
 
     stage_results = []
-    #for stage in range(0, 5):
-    stage_results.append(run(days=100, stage=0))
+    for stage in range(0, 5):
+        stage_results.append(run(days=100, stage=stage, days_per_interval=days_per_interval))
 
     plt.figure(figsize=(12, 8))
 
     for i in range(0, len(stage_results)):
         plt.plot(stage_results[i], label="Stage " + str(i))
 
-    plt.ylim([-0.1, max(stage_results) + 1])
-    plt.title('Connected Components by ' + title)
-    plt.xlabel('time (' + title.lower() + 's)')
-    plt.legend()
-
-    plt.show()
+    # plt.ylim([-0.1, max(stage_results) + 1])
+    # plt.title('Connected Components by ' + title)
+    # plt.xlabel('time (' + title.lower() + 's)')
+    # plt.legend()
+    #

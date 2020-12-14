@@ -60,8 +60,8 @@ if __name__ == '__main__':
     days_per_interval = 14
 
     stage_results = []
-    #for stage in range(0, 5):
-    stage_results.append(run(days=100, stage=0, days_per_interval=days_per_interval))
+    for stage in range(0, 5):
+        stage_results.append(run(days=100, stage=0, days_per_interval=days_per_interval))
 
     plt.figure(figsize=(12, 8))
 
